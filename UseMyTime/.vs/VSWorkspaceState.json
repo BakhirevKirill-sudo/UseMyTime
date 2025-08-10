@@ -1,0 +1,17 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\accounts",
+    "\\accounts\\templates",
+    "\\accounts\\templates\\accounts",
+    "\\accounts\\templates\\registration",
+    "\\contacts\\templates",
+    "\\contacts\\templates\\contacts",
+    "\\projects\\templates",
+    "\\projects\\templates\\projects",
+    "\\work_programs\\templates",
+    "\\work_programs\\templates\\work_programs"
+  ],
+  "SelectedNode": "\\accounts\\templates\\accounts\\register.html",
+  "PreviewInSolutionExplorer": false
+}
