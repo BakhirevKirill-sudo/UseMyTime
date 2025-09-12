@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+{% block title %}Мой отдел{% endblock %}
+
+{% block content %}
+<!-- Вывод сообщений -->
+{% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<h1>Мой отдел</h1>
+
+<div id="team-list">
+    {% for item in team_tasks %}
+    <div class="employee-item mb-2">
+        <!-- Кликабельный заголовок с Bootstrap collapse -->
+        <div class="d-flex align-items-center text-decoration-none p-3"
+             data-bs-toggle="collapse"
+             href="#tasksCollapse-{{ item.employee.id }}"
+             role="button"
+             aria-expanded="false"
+             aria-controls="tasksCollapse-{{ item.employee.id }}"
+             style="cursor: pointer; background: #f8f9fa; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 5px;">
+            <strong>{{ item.employee.user.last_name }} {{ item.employee.user.first_name }} </strong>&nbsp;— {{ item.employee.position }}
+            <!-- SVG-иконка: caret-right по умолчанию -->
+            <span class="ms-auto toggle-icon-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+                    <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                </svg>
+            </span>
+        </div>
+
+        <!-- Блок с задачами: плавное раскрытие через Bootstrap -->
+        <div class="collapse" id="tasksCollapse-{{ item.employee.id }}" style="border: 1px solid #ddd; border-top: none; border-radius: 0 0 4px 4px;">
+            <div class="p-3" style="background: #fff;">
+                <h4>Задачи в проектах</h4>
+                {% if item.tasks %}
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Проект</th>
+                                <th>Задача</th>
+                                <th>Статус</th>
+                                <th>Создана</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for task in item.tasks %}
+                                <tr>
+                                    <td>{{ task.project.title }}</td>
+                                    <td>{{ task.text|truncatechars:80 }}</td>
+                                    <td>
+                                        {% if task.is_done %}
+                                            <span class="badge bg-success">Выполнено</span>
+                                        {% else %}
+                                            <span class="badge bg-warning text-dark">Не выполнено</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ task.created_at|date:"d.m.Y" }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p><em>Нет задач в проектах.</em></p>
+                {% endif %}
+
+                <!-- Кнопки управления -->
+                <div class="mt-2">
+                    <a href="{% url 'employee_report' employee_id=item.employee.id %}" class="btn btn-sm btn-success"
+                       target="_blank">Сформировать отчёт</a>
+                    <a href="{% url 'employee_report' employee_id=item.employee.id %}?format=pdf" class="btn btn-sm btn-outline-success"
+                       target="_blank">Скачать отчёт в PDF</a>
+                    <a href="{% url 'edit_employee' user_id=item.employee.user.id %}" class="btn btn-sm btn-outline-primary">Редактировать</a>
+                    <a href="{% url 'remove_from_team' employee_id=item.employee.id %}" class="btn btn-sm btn-outline-danger"
+                       onclick="return confirm('Удалить {{ item.employee.user.last_name }} {{ item.employee.user.first_name }} ({{ item.employee.position }}) из команды?')">Удалить</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% empty %}
+    <p>В вашей команде пока нет сотрудников.</p>
+{% endfor %}
+</div>
+
+<!-- Блок для добавления сотрудников в отдел -->
+<h2>Добавить сотрудника</h2>
+<form method="post">
+    {% csrf_token %}
+    <select name="employee_id" required>
+        <option value="">Выберите сотрудника</option>
+        {% for emp in available_employees %}
+            <option value="{{ emp.id }}">{{ emp.user.last_name }} {{ emp.user.first_name }} ({{ emp.position }})</option>
+        {% empty %}
+            <option disabled>Нет доступных сотрудников</option>
+        {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-primary">Добавить в команду</button>
+</form>
+
+<!-- Кнопки для формирования отчета по всем сотрудникам в отделе -->
+<hr>
+<a href="{% url 'generate_report' %}" class="btn btn-success" target="_blank">Сформировать отчёт по отделу</a>
+<a href="{% url 'generate_report' %}?format=pdf" class="btn btn-outline-success" target="_blank">Скачать отчёт в PDF</a>
+
+<!-- JavaScript для открытия/закрытия -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('[data-bs-toggle="collapse"]').forEach(function (trigger) {
+        const iconWrapper = trigger.querySelector('.toggle-icon-wrapper');
+        const target = document.querySelector(trigger.getAttribute('href'));
+
+        if (!iconWrapper || !target) return;
+
+        // Функции для установки иконок
+        function setCaretDown() {
+            iconWrapper.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                </svg>`;
+        }
+
+        function setCaretRight() {
+            iconWrapper.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+                    <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                </svg>`;
+        }
+
+        // При открытии
+        target.addEventListener('shown.bs.collapse', function () {
+            setCaretDown();
+        });
+
+        // При закрытии
+        target.addEventListener('hidden.bs.collapse', function () {
+            setCaretRight();
+        });
+    });
+});
+</script>
+
+<style>
+    .employee-header {
+        transition: background 0.2s ease;
+    }
+    .employee-header:hover {
+        background: #e9ecef;
+    }
+    .badge {
+        font-size: 0.8em;
+        padding: 0.5em 0.7em;
+    }
+</style>
+
+{% endblock %}

@@ -10,8 +10,94 @@
     <p>Вы можете использовать следующую форму для редактирования профиля:</p>
     <form method="post" enctype="multipart/form-data">
         <table style="border-collapse: separate; border-spacing: 10px;">
-            {{ user_form.as_table }}
-            {{ profile_form.as_table }}
+            <!-- Изменен порядок полей и добавлены новые -->
+            <!-- Фамилия -->
+            <tr>
+                <th>{{ user_form.last_name.label_tag }}</th>
+                <td>
+                    {{ user_form.last_name }}
+                    {% if user_form.last_name.errors %}
+                    <div style="color: red;">{{ user_form.last_name.errors }}</div>
+                    {% endif %}
+                </td>
+            </tr>
+
+            <!-- Имя -->
+            <tr>
+                <th>{{ user_form.first_name.label_tag }}</th>
+                <td>
+                    {{ user_form.first_name }}
+                    {% if user_form.first_name.errors %}
+                    <div style="color: red;">{{ user_form.first_name.errors }}</div>
+                    {% endif %}
+                </td>
+            </tr>
+
+            <!-- Отчество (из ProfileForm) -->
+            <tr>
+                <th>{{ profile_form.surname.label_tag }}</th>
+                <td>
+                    {{ profile_form.surname }}
+                    {% if profile_form.surname.errors %}
+                    <div style="color: red;">{{ profile_form.surname.errors }}</div>
+                    {% endif %}
+                </td>
+            </tr>
+
+            <!-- Фото -->
+            <tr>
+                <th>{{ profile_form.photo.label_tag }}</th>
+                <td>
+                    {{ profile_form.photo }}
+                    {% if profile_form.photo.errors %}
+                    <div style="color: red;">{{ profile_form.photo.errors }}</div>
+                    {% endif %}
+                </td>
+            </tr>
+
+            <!-- Должность -->
+            <tr>
+                <th>{{ profile_form.position.label_tag }}</th>
+                <td>
+                    {{ profile_form.position }}
+                    {% if profile_form.position.errors %}
+                    <div style="color: red;">{{ profile_form.position.errors }}</div>
+                    {% endif %}
+                </td>
+            </tr>
+
+            <!-- Внутренний номер -->
+            <tr>
+                <th>{{ profile_form.phone_internal.label_tag }}</th>
+                <td>
+                    {{ profile_form.phone_internal }}
+                    {% if profile_form.phone_internal.errors %}
+                    <div style="color: red;">{{ profile_form.phone_internal.errors }}</div>
+                    {% endif %}
+                </td>
+            </tr>
+
+            <!-- Имя пользователя -->
+            <tr>
+                <th>{{ user_form.username.label_tag }}</th>
+                <td>
+                    {{ user_form.username }}
+                    {% if user_form.username.errors %}
+                    <div style="color: red;">{{ user_form.username.errors }}</div>
+                    {% endif %}
+                </td>
+            </tr>
+
+            <!-- Email -->
+            <tr>
+                <th>{{ user_form.email.label_tag }}</th>
+                <td>
+                    {{ user_form.email }}
+                    {% if user_form.email.errors %}
+                    <div style="color: red;">{{ user_form.email.errors }}</div>
+                    {% endif %}
+                </td>
+            </tr>
         </table>
         {% csrf_token %}
         <p><input type="submit" value="Сохранить изменения" class="btn text-white" 

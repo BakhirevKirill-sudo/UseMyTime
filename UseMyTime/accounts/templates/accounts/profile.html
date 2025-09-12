@@ -14,27 +14,36 @@
 </style>
 {% endblock style %}
 {% block content %}
+    <!-- Изменен порядок полей и добавлены новые -->
     <h1>{{ user.last_name }} {{ user.first_name }} {{ user.profile.surname }}</h1>
     <table>
         <tr>
             <th>Фамилия</th>
-            <td>{{ user.first_name }}</td>
+            <td>{{ user.last_name }}</td>
         </tr>
         <tr>
             <th>Имя</th>
-            <td>{{ user.last_name }}</td>
+            <td>{{ user.first_name }}</td>
         </tr>
         <tr>
             <th>Отчество</th>
             <td>{{ user.profile.surname }}</td>
         </tr>
         <tr>
-            <th>Адрес электронной почты</th>
-            <td>{{ user.email }}</td>
+            <th>Должность</th>
+            <td>{{ user.profile.position }}</td>
+        </tr>
+        <tr>
+            <th>Внутренний номер</th>
+            <td>{{ user.profile.phone_internal }}</td>
         </tr>
         <tr>
             <th>Имя пользователя</th>
             <td>{{ user.username }}</td>
+        </tr>
+        <tr>
+            <th>Адрес электронной почты</th>
+            <td>{{ user.email }}</td>
         </tr>
     </table>
     <p><a href="{% url 'profile_edit' %}">Редактировать профиль</a></p>

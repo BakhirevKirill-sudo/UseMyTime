@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Отчёт по отделу</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', 'Liberation Serif', serif;
+            font-size: 12pt;
+            line-height: 1.5;
+            margin: 2cm;
+            text-align: justify;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .subheader {
+            margin-bottom: 20px;
+        }
+
+        .subheader p {
+            margin: 8px 0px;
+        }
+
+        .header h1 {
+            font-size: 14pt;
+            font-weight: bold;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .employee-section p {
+            margin: 8px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 12pt;
+        }
+
+        th, td {
+            padding: 6px;
+            vertical-align: top;
+            border: 1px solid #000;
+        }
+
+        th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .total {
+            margin-bottom: 20px;
+        }
+
+        .total p {
+            margin: 8px 0px;
+        }
+
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+
+        @media screen {
+            .print-btn {
+                margin: 20px 0;
+                padding: 10px 20px;
+                background: #2980b9;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+        }
+
+        @media print {
+            .print-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Заголовок -->
+    <div class="header">
+        <h1>Отчёт по отделу</h1>
+    </div>
+
+    <!-- Информация о начальнике и дате формирования отчета -->
+    <div class="subheader">
+        <p><strong>Начальник отдела:</strong> {{ manager.user.last_name }} {{ manager.user.first_name }} {{ manager.surname }}</p>
+        <p><strong>Дата формирования:</strong> {{ now|date:"d.m.Y" }}</p>
+    </div>
+
+    <!-- Информация по каждому сотруднику -->
+    {% for item in team_report %}
+        {% if item.project_data %}
+            <div class="employee-section">
+                <p><strong>ФИО сотрудника:</strong> {{ item.employee.user.last_name }} {{ item.employee.user.first_name }} {{ item.employee.surname|default:"" }}</p>
+                <p><strong>Должность:</strong> {{ item.employee.position }}</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Проект</th>
+                            <th>Задача</th>
+                            <th>Дата создания</th>
+                            <th>Дата завершения</th>
+                            <th>Затрачено времени</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for proj in item.project_data %}
+                            {% for task in proj.tasks %}
+                                <tr>
+                                    <td>{{ proj.project.title }}</td>
+                                    <td>{{ task.text }}</td>
+                                    <td>{{ proj.created_at|date:"d.m.Y" }}</td>
+                                    <td>{{ proj.completed_at|date:"d.m.Y" }}</td>
+                                    <td>{{ proj.hours }} ч {{ proj.minutes }} мин</td>
+                                </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="total">
+                    <p><strong>Всего по сотруднику:</strong></p>
+                    <p><strong>Выполнено задач: </strong>{{ item.total_tasks }} шт.</p>
+                    <p><strong>Общее затрачённое время: </strong>{{ item.total_hours }} ч {{ item.total_minutes }} мин</p>
+                </div>
+            </div>
+        {% endif %}
+    {% empty %}
+        <p>В отделе нет сотрудников или нет выполненных задач.</p>
+    {% endfor %}
+
+    <!-- Блок подписи -->
+    <div class="total">
+        <p><strong>ИТОГО по отделу:</strong></p>
+        <p><strong>Всего выполнено задач:</strong> {{ dept_total_tasks }} шт.</p>
+        <p><strong>Общее затрачённое время: </strong>{{ dept_total_hours }} ч {{ dept_total_minutes }} мин</p>
+    </div>
+
+    <div style="margin-top: 50px; font-size: 14px;">
+    <table width="100%" style="border-collapse: collapse; border: none;">
+        <tr>
+            <!-- Левая колонка: данные составителя -->
+            <td width="50%" style="vertical-align: top; padding-right: 20px; border: none;">
+                <p><strong>Составил:</strong></p>
+                <p><strong>Должность:</strong></p>
+            </td>
+            <!-- Правая колонка: подпись -->
+            <td width="50%" style="vertical-align: top; text-align: right; border: none;">
+                <p>Подпись: _________________</p>
+                <p>Расшифровка: _________________</p>
+                <p>Дата: «___» ____________ {{ now|date:"Y" }} г.</p>
+            </td>
+        </tr>
+    </table>
+    </div>
+
+    <button class="print-btn" onclick="window.print()">Распечатать</button>
+</body>
+</html>

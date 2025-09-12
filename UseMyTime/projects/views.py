@@ -124,10 +124,24 @@ def project_stop(request):
     return JsonResponse({'is_success': True})
 
 # Архивация проекта
+# Исправлен баг (при архивации активного проекта он не снимался с активного состояния)
 @require_POST
 @login_required
 def project_archive(request, id):
     try:
+        project = Project.objects.get(id=id, user=request.user)
+        # Проверяем, не является ли проект активным
+        try:
+            active_project = ActiveProject.objects.get(user=request.user)
+            if active_project.project == project:
+                # Сбрасываем активный проект
+                active_project.project = None
+                active_project.current_program = None
+                active_project.in_work = False
+                active_project.save()
+        except ActiveProject.DoesNotExist:
+            pass
+
         project = Project.objects.get(id=id, user=request.user)
         project.is_archived = True
         project.save()

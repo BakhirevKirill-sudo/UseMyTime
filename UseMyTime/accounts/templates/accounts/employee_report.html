@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Отчёт по сотруднику</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', 'Liberation Serif', serif;
+            font-size: 12pt;
+            line-height: 1.5;
+            margin: 2cm;
+            text-align: justify;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 14pt;
+            font-weight: bold;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info {
+            margin: 20px 0;
+        }
+
+        .info p {
+            margin: 8px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 12pt;
+        }
+
+        th, td {
+            padding: 6px;
+            vertical-align: top;
+            border: 1px solid #000;
+        }
+
+        th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .total {
+            margin-bottom: 20px;
+        }
+
+        .total p {
+            margin: 8px 0px;
+        }
+
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+
+        @media screen {
+            .print-btn {
+                margin: 20px 0;
+                padding: 10px 20px;
+                background: #2980b9;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+        }
+
+        @media print {
+            .print-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Заголовок -->
+    <div class="header">
+        <h1>Отчёт по сотруднику</h1>
+    </div>
+
+    <!-- Информация о сотруднике -->
+    <div class="info">
+        <p><strong>ФИО сотрудника:</strong> {{ employee.user.last_name }} {{ employee.user.first_name }} {% if employee.surname %}{{ employee.surname }}{% endif %}</p>
+        <p><strong>Должность:</strong> {{ employee.position }}</p>
+        <p><strong>Дата формирования:</strong> {{ now|date:"d.m.Y" }}</p>
+    </div>
+
+    <!-- Таблица задач -->
+    {% if report_data %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Проект</th>
+                    <th>Задача</th>
+                    <th>Дата создания</th>
+                    <th>Дата завершения</th>
+                    <th>Затрачено времени</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in report_data %}
+                    {% for task in item.tasks %}
+                        <tr>
+                            <td>{{ item.project.title }}</td>
+                            <td>{{ task.text }}</td>
+                            <td>{{ item.created_at|date:"d.m.Y" }}</td>
+                            <td>{{ item.completed_at|date:"d.m.Y" }}</td>
+                            <td>{{ item.hours }} ч {{ item.minutes }} мин</td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="total">
+            <p><strong>Всего выполнено задач: </strong>{{ completed_tasks|length }} шт.</p>
+            <p><strong>Общее затрачённое время: </strong>{{ total_hours }} ч {{ total_minutes }} мин</p>
+        </div>
+    {% else %}
+        <p>Нет выполненных задач в неархивных проектах.</p>
+    {% endif %}
+
+    <!-- Блок подписи -->
+    <div style="margin-top: 50px; font-size: 14px;">
+    <table width="100%" style="border-collapse: collapse; border: none;">
+        <tr>
+            <!-- Левая колонка: данные составителя -->
+            <td width="50%" style="vertical-align: top; padding-right: 20px; border: none;">
+                <p><strong>Составил:</strong></p>
+                <p><strong>Должность:</strong></p>
+            </td>
+            <!-- Правая колонка: подпись -->
+            <td width="50%" style="vertical-align: top; text-align: right; border: none;">
+                <p>Подпись: _________________</p>
+                <p>Расшифровка: _________________</p>
+                <p>Дата: «___» ____________ {{ now|date:"Y" }} г.</p>
+            </td>
+        </tr>
+    </table>
+    </div>
+
+    <button class="print-btn" onclick="window.print()">Распечатать</button>
+
+</body>
+</html>
