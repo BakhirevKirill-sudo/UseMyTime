@@ -36,4 +36,5 @@ class ProjectsConfig(AppConfig):
     
     # Выполнение создания тестовых данных
     def ready(self):
-        post_migrate.connect(create_test_data, sender=self)
+        #post_migrate.connect(create_test_data, sender=self)
+        pass

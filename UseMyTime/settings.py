@@ -23,11 +23,6 @@ INSTALLED_APPS = [
     'contacts.apps.ContactsConfig',
     'work_programs.apps.WorkProgramsConfig',
     'projects.apps.ProjectsConfig',
-
-    'accounts',
-    'projects',
-    'work_programs',
-    'contacts',
 ]
 
 MIDDLEWARE = [
@@ -40,7 +35,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'UseMyTime.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATES = [
     {
@@ -57,7 +52,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'UseMyTime.wsgi.application'
+WSGI_APPLICATION = 'wsgi.application'
 
 DATABASES = {
     'default': {
