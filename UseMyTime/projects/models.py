@@ -19,9 +19,9 @@ class Project(models.Model):
         through_fields=['project', 'program']
     )
 
-    def get_hours_minutes(self):
+    def get_hours_minutes_seconds(self):
         seconds = int(self.total_time.total_seconds())
-        return [seconds // 3600, (seconds % 3600) // 60] # [hours, minutes]
+        return [seconds // 3600, (seconds % 3600) // 60, seconds]  # [hours, minutes, seconds]
 
 # Промежуточная модель между программами и проектами
 # Хранит время работы над проектом для каждой программы
@@ -34,9 +34,9 @@ class ProjectProgram(models.Model):
                                 related_name='project_programs')
     total_time = models.DurationField(default=timedelta(0))
 
-    def get_hours_minutes(self):
+    def get_hours_minutes_seconds(self):
         seconds = int(self.total_time.total_seconds())
-        return [seconds // 3600, (seconds % 3600) // 60] # [hours, minutes]
+        return [seconds // 3600, (seconds % 3600) // 60, seconds] # [hours, minutes, seconds]
 
 # Модель активного проекта
 # Для него и будет учитываться время

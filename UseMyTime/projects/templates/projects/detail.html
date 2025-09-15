@@ -28,7 +28,7 @@
     <!-- Данные о времени работы -->
     <div class="row">
         <div class="col text-start w-75"><h2 class="fw-light">Общее время работы над проектом</h2></div>
-        <div class="col text-end"><h1>{{ object.get_hours_minutes.0 }} часов {{ object.get_hours_minutes.1 }} мин</h1></div>
+        <div class="col text-end"><h1>{{ object.get_hours_minutes_seconds.0 }} часов {{ object.get_hours_minutes_seconds.1 }} мин {{ object.get_hours_minutes_seconds.2 }} сек</h1></div>
     </div>
     <hr>
     {% if object.project_programs.all %}
@@ -37,7 +37,7 @@
         {% for project_program in object.project_programs.all %}
         <tr>
             <th class="pe-3 ps-5">{{ project_program.program.name }}</th>
-            <td>{{ project_program.get_hours_minutes.0 }} часов {{ project_program.get_hours_minutes.1 }} мин</td>
+            <td>{{ project_program.get_hours_minutes_seconds.0 }} часов {{ project_program.get_hours_minutes_seconds.1 }} мин {{ object.get_hours_minutes_seconds.2 }} сек</td>
         </tr>
         {% endfor %}
     </table>

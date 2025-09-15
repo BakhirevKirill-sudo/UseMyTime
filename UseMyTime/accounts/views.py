@@ -163,7 +163,7 @@ def edit_employee(request, user_id):
 
 # Добавлена возможность генерировать отчет по всему отделу
 @login_required
-@role_required(['manager', 'director'])
+#@role_required(['manager'])
 def generate_report(request):
     profile = request.user.profile
     team = Profile.objects.filter(manager=profile)
@@ -197,7 +197,7 @@ def generate_report(request):
             if tasks.exists():
                 proj_seconds = int(project.total_time.total_seconds())
                 total_seconds += proj_seconds
-                hours, minutes = project.get_hours_minutes()
+                hours, minutes, seconds = project.get_hours_minutes_seconds()
 
                 # Дата завершения — дата последней выполненной задачи
                 last_task = tasks.order_by('-created_at').first()
@@ -207,6 +207,7 @@ def generate_report(request):
                     'tasks': tasks,
                     'hours': hours,
                     'minutes': minutes,
+                    'seconds': seconds,
                     'created_at': project.created_at,
                     'completed_at': last_task.created_at,
                 })
@@ -214,6 +215,7 @@ def generate_report(request):
         # Общее время по сотруднику
         employee_data['total_hours'] = total_seconds // 3600
         employee_data['total_minutes'] = (total_seconds % 3600) // 60
+        employee_data['total_seconds'] = total_seconds
         total_department_time += total_seconds
         total_department_tasks += employee_data['total_tasks']
 
@@ -229,6 +231,7 @@ def generate_report(request):
         'dept_total_hours': dept_total_hours,
         'dept_total_minutes': dept_total_minutes,
         'dept_total_tasks': total_department_tasks,
+        'dept_total_seconds': total_department_time,
         'now': timezone.now(),
     }
 
@@ -246,7 +249,7 @@ def generate_report(request):
 
 # Добавлена возможность генерировать отчет по каждому сотруднику отдельно
 @login_required
-@role_required(['manager', 'director'])
+#@role_required(['manager'])
 def employee_report(request, employee_id):
     # Получаем сотрудника
     employee = get_object_or_404(Profile, id=employee_id)
@@ -268,7 +271,7 @@ def employee_report(request, employee_id):
     for project in projects:
         tasks = completed_tasks.filter(project=project)
         if tasks.exists():
-            hours, minutes = project.get_hours_minutes()  # [ч, м]
+            hours, minutes, seconds = project.get_hours_minutes_seconds()  # [ч, м]
             total_time_seconds += int(project.total_time.total_seconds())
 
             report_data.append({
@@ -276,6 +279,7 @@ def employee_report(request, employee_id):
                 'tasks': tasks,
                 'hours': hours,
                 'minutes': minutes,
+                'seconds': seconds,
                 'created_at': project.created_at,
                 # Завершение — дата последней выполненной задачи
                 'completed_at': tasks.order_by('-created_at').first().created_at,
@@ -291,6 +295,7 @@ def employee_report(request, employee_id):
         'completed_tasks': completed_tasks,
         'total_hours': total_hours,
         'total_minutes': total_minutes,
+        'total_seconds': total_time_seconds,
         'now': timezone.now(),
     }
 

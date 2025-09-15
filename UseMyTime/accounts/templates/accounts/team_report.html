@@ -125,7 +125,7 @@
                                     <td>{{ task.text }}</td>
                                     <td>{{ proj.created_at|date:"d.m.Y" }}</td>
                                     <td>{{ proj.completed_at|date:"d.m.Y" }}</td>
-                                    <td>{{ proj.hours }} ч {{ proj.minutes }} мин</td>
+                                    <td>{{ proj.hours }} ч {{ proj.minutes }} мин {{ proj.seconds }} сек</td>
                                 </tr>
                             {% endfor %}
                         {% endfor %}
@@ -134,7 +134,7 @@
                 <div class="total">
                     <p><strong>Всего по сотруднику:</strong></p>
                     <p><strong>Выполнено задач: </strong>{{ item.total_tasks }} шт.</p>
-                    <p><strong>Общее затрачённое время: </strong>{{ item.total_hours }} ч {{ item.total_minutes }} мин</p>
+                    <p><strong>Общее затрачённое время: </strong>{{ item.total_hours }} ч {{ item.total_minutes }} мин {{ item.total_seconds }} сек</p>
                 </div>
             </div>
         {% endif %}
@@ -146,7 +146,7 @@
     <div class="total">
         <p><strong>ИТОГО по отделу:</strong></p>
         <p><strong>Всего выполнено задач:</strong> {{ dept_total_tasks }} шт.</p>
-        <p><strong>Общее затрачённое время: </strong>{{ dept_total_hours }} ч {{ dept_total_minutes }} мин</p>
+        <p><strong>Общее затрачённое время: </strong>{{ dept_total_hours }} ч {{ dept_total_minutes }} мин {{ dept_total_seconds }} сек</p>
     </div>
 
     <div style="margin-top: 50px; font-size: 14px;">
