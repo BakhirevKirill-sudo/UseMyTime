@@ -12,15 +12,15 @@ ROLE_CHOICES = (
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL,
                                 on_delete=models.CASCADE)
-    surname = models.CharField(max_length=50, blank=True, null=True, verbose_name='Отчество')
+    surname = models.CharField(max_length=50, blank=True, verbose_name='Отчество', default='')
     position = models.CharField("Должность", max_length=100, blank=True)
-    phone_internal = models.CharField("Внутренний номер", max_length=10, blank=True, null=True)
+    phone_internal = models.CharField("Внутренний номер", max_length=10, blank=True, default='')
     photo = models.ImageField(upload_to='users/%Y/%m/%d/',
                               blank=True,
                               verbose_name='Фото')
     role = models.CharField("Роль", max_length=20, choices=ROLE_CHOICES, default='employee')
     # Добавлено поле для связи: кто начальник у этого сотрудника
-    manager = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='subordinates',
+    manager = models.ForeignKey('self', on_delete=models.SET_NULL, blank=True,  null=True, related_name='subordinates',
                                 verbose_name="Начальник")
     def __str__(self):
         return f'Profile of {self.user.username}'
