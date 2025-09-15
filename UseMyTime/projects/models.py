@@ -21,7 +21,7 @@ class Project(models.Model):
 
     def get_hours_minutes_seconds(self):
         seconds = int(self.total_time.total_seconds())
-        return [seconds // 3600, (seconds % 3600) // 60, seconds]  # [hours, minutes, seconds]
+        return [seconds // 3600, (seconds % 3600) // 60, seconds % 60]  # [hours, minutes, seconds]
 
 # Промежуточная модель между программами и проектами
 # Хранит время работы над проектом для каждой программы
@@ -36,7 +36,7 @@ class ProjectProgram(models.Model):
 
     def get_hours_minutes_seconds(self):
         seconds = int(self.total_time.total_seconds())
-        return [seconds // 3600, (seconds % 3600) // 60, seconds] # [hours, minutes, seconds]
+        return [seconds // 3600, (seconds % 3600) // 60, seconds % 60] # [hours, minutes, seconds]
 
 # Модель активного проекта
 # Для него и будет учитываться время

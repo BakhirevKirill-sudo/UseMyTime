@@ -118,7 +118,7 @@
                             <td>{{ task.text }}</td>
                             <td>{{ item.created_at|date:"d.m.Y" }}</td>
                             <td>{{ item.completed_at|date:"d.m.Y" }}</td>
-                            <td>{{ item.hours }} ч {{ item.minutes }} мин {{ item.seconds }} сек</td>
+                            <td>{{ item.hours }} ч {{ item.minutes }} мин {{ item.seconds % 60 }} сек</td>
                         </tr>
                     {% endfor %}
                 {% endfor %}
@@ -127,7 +127,7 @@
 
         <div class="total">
             <p><strong>Всего выполнено задач: </strong>{{ completed_tasks|length }} шт.</p>
-            <p><strong>Общее затрачённое время: </strong>{{ total_hours }} ч {{ total_minutes }} мин {{ total_seconds }} сек</p>
+            <p><strong>Общее затрачённое время: </strong>{{ total_hours }} ч {{ total_minutes }} мин {{ total_seconds % 60 }} сек</p>
         </div>
     {% else %}
         <p>Нет выполненных задач в неархивных проектах.</p>

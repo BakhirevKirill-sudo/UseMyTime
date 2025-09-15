@@ -125,7 +125,7 @@
                                     <td>{{ task.text }}</td>
                                     <td>{{ proj.created_at|date:"d.m.Y" }}</td>
                                     <td>{{ proj.completed_at|date:"d.m.Y" }}</td>
-                                    <td>{{ proj.hours }} ч {{ proj.minutes }} мин {{ proj.seconds }} сек</td>
+                                    <td>{{ proj.hours }} ч {{ proj.minutes }} мин {{ proj.seconds % 60 }} сек</td>
                                 </tr>
                             {% endfor %}
                         {% endfor %}
@@ -134,7 +134,7 @@
                 <div class="total">
                     <p><strong>Всего по сотруднику:</strong></p>
                     <p><strong>Выполнено задач: </strong>{{ item.total_tasks }} шт.</p>
-                    <p><strong>Общее затрачённое время: </strong>{{ item.total_hours }} ч {{ item.total_minutes }} мин {{ item.total_seconds }} сек</p>
+                    <p><strong>Общее затрачённое время: </strong>{{ item.total_hours }} ч {{ item.total_minutes }} мин {{ item.total_seconds % 60 }} сек</p>
                 </div>
             </div>
         {% endif %}
