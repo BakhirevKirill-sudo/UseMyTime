@@ -22,7 +22,12 @@ INSTALLED_APPS = [
 
     'contacts.apps.ContactsConfig',
     'work_programs.apps.WorkProgramsConfig',
-    'projects.apps.ProjectsConfig'
+    'projects.apps.ProjectsConfig',
+
+    'accounts',
+    'projects',
+    'work_programs',
+    'contacts',
 ]
 
 MIDDLEWARE = [
