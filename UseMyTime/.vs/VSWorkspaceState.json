@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\accounts",
+    "\\accounts\\templates",
+    "\\accounts\\templates\\accounts",
+    "\\accounts\\templates\\registration",
+    "\\projects",
+    "\\projects\\templates",
+    "\\projects\\templates\\projects",
+    "\\templates"
+  ],
+  "SelectedNode": "\\accounts\\decorators.py",
+  "PreviewInSolutionExplorer": false
+}
