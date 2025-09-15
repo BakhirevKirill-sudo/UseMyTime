@@ -215,7 +215,7 @@ def generate_report(request):
         # Общее время по сотруднику
         employee_data['total_hours'] = total_seconds // 3600
         employee_data['total_minutes'] = (total_seconds % 3600) // 60
-        employee_data['total_seconds'] = total_seconds
+        employee_data['total_seconds'] = total_seconds % 60
         total_department_time += total_seconds
         total_department_tasks += employee_data['total_tasks']
 
@@ -231,7 +231,7 @@ def generate_report(request):
         'dept_total_hours': dept_total_hours,
         'dept_total_minutes': dept_total_minutes,
         'dept_total_tasks': total_department_tasks,
-        'dept_total_seconds': total_department_time,
+        'dept_total_seconds': total_department_time % 60,
         'now': timezone.now(),
     }
 
